@@ -14,7 +14,7 @@ resource "aws_subnet" "public_subnet" {
   vpc_id            = aws_vpc.my_vpc.id
   cidr_block        = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone = "eu-north-1a"  # Subnet in AZ A
+  availability_zone = "eu-north-1a"  
 
   tags = {
     Name = "public-subnet"
@@ -24,8 +24,8 @@ resource "aws_subnet" "public_subnet" {
 
 resource "aws_subnet" "public_subnet_b" {
   vpc_id            = aws_vpc.my_vpc.id
-  cidr_block        = "10.0.4.0/24"  # Different CIDR block for the new public subnet
-  availability_zone = "eu-north-1b"  # Ensure it's in a different Availability Zone
+  cidr_block        = "10.0.4.0/24"  
+  availability_zone = "eu-north-1b"  
 
   tags = {
     Name = "public-subnet-b"
@@ -34,8 +34,8 @@ resource "aws_subnet" "public_subnet_b" {
 
 resource "aws_subnet" "private_subnet_a" {
   vpc_id            = aws_vpc.my_vpc.id
-  cidr_block        = "10.0.2.0/24"  # New CIDR block
-  availability_zone = "eu-north-1a"  # Subnet in AZ A
+  cidr_block        = "10.0.2.0/24"  
+  availability_zone = "eu-north-1a"  
 
   tags = {
     Name = "private-subnet-a"
@@ -45,7 +45,7 @@ resource "aws_subnet" "private_subnet_a" {
 resource "aws_subnet" "private_subnet_b" {
   vpc_id            = aws_vpc.my_vpc.id
   cidr_block        = "10.0.3.0/24"
-  availability_zone = "eu-north-1b"  # Subnet in AZ B
+  availability_zone = "eu-north-1b"  
 
   tags = {
     Name = "private-subnet-b"

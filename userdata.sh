@@ -10,7 +10,7 @@ curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 
 # Set up Laravel
-cd /var/www/html
+cd /var/www/html/app 
 sudo rm -rf *
 git clone https://github.com/irondijonathan/terraformTest.git .
 composer install
@@ -22,7 +22,7 @@ sudo chmod -R 777 /var/www/html/storage
 sudo chmod -R 777 /var/www/html/bootstrap/cache
 
 # Set environment variables
-cp .env.example .env
+cp .env .env
 php artisan key:generate
 php artisan migrate --force
 
