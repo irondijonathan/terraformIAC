@@ -1,27 +1,7 @@
-variable "region" {
-  description = "The AWS region to deploy to"
-}
-
-variable "key_name" {
-  description = "The name of the SSH key pair"
-}
-
-variable "db_user" {
-  description = "The username for the MariaDB database"
-}
-
-variable "db_password" {
-  description = "The password for the MariaDB database"
-}
-
-variable "ec2_ami" {
-  description = "AMI ID for EC2 instance"
-}
-
-variable "ec2_instance_type" {
-  description = "Instance type for EC2 instance"
-}
-
-variable "user_data_script" {
-  description = "User data script to bootstrap the instance"
-}
+region       = "eu-north-1"
+key_name     = "terraformTest" # Name of the key pair as it saved on AWS
+db_user      = "admin"
+db_password  = "jonathan_terraform_test_12"
+ec2_ami      = "ami-0f2a4775fe3663d80" # Example AMI ID
+ec2_instance_type = "t3.small"
+user_data_script  = "userdata.sh"
