@@ -1,5 +1,10 @@
 provider "aws" {
-  region = "eu-north-1"  # Update with your desired region
+  region = "us-east-1"  # Region
+}
+
+resource "aws_key_pair" "deployer" {
+  key_name   = "final-pair"
+  public_key = file("~/.ssh/final.pub")
 }
 
 resource "aws_vpc" "default" {
@@ -75,7 +80,7 @@ resource "aws_subnet" "public_subnet_a" {
   vpc_id            = aws_vpc.default.id
   cidr_block        = "10.0.1.0/24"
   map_public_ip_on_launch = true
-  availability_zone = "eu-north-1a"
+  availability_zone = "us-east-1a"
 
   tags = {
     Name = "public-subnet-a"
@@ -86,7 +91,7 @@ resource "aws_subnet" "public_subnet_b" {
   vpc_id            = aws_vpc.default.id
   cidr_block        = "10.0.2.0/24"
   map_public_ip_on_launch = true
-  availability_zone = "eu-north-1b"
+  availability_zone = "us-east-1b"
 
   tags = {
     Name = "public-subnet-b"
@@ -97,7 +102,7 @@ resource "aws_subnet" "private_subnet_a" {
   vpc_id            = aws_vpc.default.id
   cidr_block        = "10.0.3.0/24"
   map_public_ip_on_launch = false
-  availability_zone = "eu-north-1a"
+  availability_zone = "us-east-1a"
 
   tags = {
     Name = "private-subnet-a"
@@ -108,7 +113,7 @@ resource "aws_subnet" "private_subnet_b" {
   vpc_id            = aws_vpc.default.id
   cidr_block        = "10.0.4.0/24"
   map_public_ip_on_launch = false
-  availability_zone = "eu-north-1b"
+  availability_zone = "us-east-1b"
 
   tags = {
     Name = "private-subnet-b"
@@ -117,13 +122,13 @@ resource "aws_subnet" "private_subnet_b" {
 
 
 resource "aws_instance" "my_instance" {
-  ami           = "ami-0f2a4775fe3663d80"  # Update with your desired AMI ID
-  instance_type = "t3.small"       # Update with your desired instance type
-  key_name      = "terraformTest"    # Update with your key pair name
+  ami           = "ami-0e001c9271cf7f3b9"  # Update with your desired AMI ID
+  instance_type = "t3.micro"       # Update with your desired instance type
+  key_name      = aws_key_pair.deployer.key_name    # Update with your key pair name
   subnet_id     = aws_subnet.public_subnet_a.id
   vpc_security_group_ids = [aws_security_group.allow_ssh.id, aws_security_group.allow_http.id]
 
-  user_data = file("userdata.sh")  # path to the userdata.sh script
+  # user_data = file("userdata.sh")  # path to the userdata.sh script
 
   tags = {
     Name = "my-instance"
@@ -144,8 +149,8 @@ resource "aws_db_instance" "my_db_instance" {
   allocated_storage    = 20
   engine               = "mariadb"
   instance_class       = "db.t3.micro"
-  username             = var.db_user
-  password             = var.db_password
+  username             = "admin"
+  password             = "jonathan_test_12"
   db_subnet_group_name = aws_db_subnet_group.my_db_subnet_group.name
   skip_final_snapshot  = true
 
