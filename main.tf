@@ -149,8 +149,8 @@ resource "aws_db_instance" "my_db_instance" {
   allocated_storage    = 20
   engine               = "mariadb"
   instance_class       = "db.t3.micro"
-  username             = "admin"
-  password             = "jonathan_test_12"
+  username             = ""
+  password             = ""
   db_subnet_group_name = aws_db_subnet_group.my_db_subnet_group.name
   skip_final_snapshot  = true
 
