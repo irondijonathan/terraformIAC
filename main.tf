@@ -9,6 +9,9 @@ resource "aws_key_pair" "deployer" {
 
 resource "aws_vpc" "default" {
   cidr_block = "10.0.0.0/16"
+
+  enable_dns_support = true
+  enable_dns_hostnames = true
 }
 
 
@@ -48,6 +51,29 @@ resource "aws_security_group" "allow_http" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+resource "aws_security_group" "allow_mysql" {
+  vpc_id = aws_vpc.default.id
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # Allow access from anywhere
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "allow-mysql"
+  }
+}
+
 
 resource "aws_internet_gateway" "my_igw" {
   vpc_id = aws_vpc.default.id
@@ -138,26 +164,30 @@ resource "aws_instance" "my_instance" {
 
 resource "aws_db_subnet_group" "my_db_subnet_group" {
   name       = "my-db-subnet-group"
-  subnet_ids = [aws_subnet.private_subnet_a.id, aws_subnet.private_subnet_b.id]  # Subnets from different AZs
+  subnet_ids = [aws_subnet.public_subnet_a.id, aws_subnet.public_subnet_b.id]  # Using public subnets
 
   tags = {
     Name = "my-db-subnet-group"
   }
 }
 
+
 resource "aws_db_instance" "my_db_instance" {
   allocated_storage    = 20
   engine               = "mariadb"
   instance_class       = "db.t3.micro"
-  username             = ""
-  password             = ""
+  username             = "admin"
+  password             = "jonathan_test_12"
   db_subnet_group_name = aws_db_subnet_group.my_db_subnet_group.name
+  publicly_accessible  = true
+  vpc_security_group_ids = [aws_security_group.allow_mysql.id]
   skip_final_snapshot  = true
 
   tags = {
     Name = "my-db-instance"
   }
 }
+
 
 
 resource "aws_lb" "my_lb" {
